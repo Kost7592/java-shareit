@@ -1,27 +1,22 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.request.model.ItemRequest;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Item {
+public class User {
     Long id;
     @NotBlank(message = "Поле не может быть пустым")
     String name;
+    @Email(message = "Указан некорректный Email")
     @NotBlank(message = "Поле не может быть пустым")
-    String description;
-    @NotNull(message = "Поле не может быть null")
-    Boolean available;
-    Long ownerId;
-    ItemRequest request;
+    String email;
 }
