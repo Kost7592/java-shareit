@@ -13,6 +13,9 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Класс ItemRepositoryImpl реализация интерфейса ItemRepository для работы с вещами (items).
+ */
 @Slf4j
 @Repository
 @RequiredArgsConstructor
@@ -76,19 +79,22 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> getItemsBySearch(String text) {
-        List<Item> itemBySearch = new ArrayList<>();
-        List<Item> itemsList = new ArrayList<>(items.values());
-        for (Item item : itemsList) {
-            if ((StringUtils.containsIgnoreCase(item.getName(), text) ||
-                    StringUtils.containsIgnoreCase(item.getDescription(), text))
-                    && item.getAvailable()) {
-                itemBySearch.add(item);
-            }
-        }
+        List<Item> filteredItems = items.values().stream()
+                .filter(item -> StringUtils.containsIgnoreCase(item.getName(), text) ||
+                        StringUtils.containsIgnoreCase(item.getDescription(), text))
+                .filter(Item::getAvailable)
+                .toList();
+        List<Item> itemBySearch = new ArrayList<>(filteredItems);
         log.info("Получен список вещей по текстовому запросу");
         return itemBySearch;
     }
 
+    /**
+     * Метод updateItemFields обновляет поля вещи с идентификатором id.
+     *
+     * @param id идентификатор обновляемой вещи.
+     * @param updatedItem обновляемая вещь.
+     */
     private void updateItemFields(Long id, Item updatedItem) {
         Item item = items.get(id);
         if (updatedItem.getName() != null) {
@@ -103,6 +109,11 @@ public class ItemRepositoryImpl implements ItemRepository {
         items.put(id, item);
     }
 
+    /**
+     * Метод getNextId возвращает следующий идентификатор вещи.
+     *
+     * @return следующий идентификатор.
+     */
     private long getNextId() {
         return idCount++;
     }

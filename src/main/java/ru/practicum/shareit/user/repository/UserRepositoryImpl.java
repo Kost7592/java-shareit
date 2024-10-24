@@ -63,6 +63,12 @@ public class UserRepositoryImpl implements UserRepository {
         return users.get(id);
     }
 
+    /**
+     * Метод updateUserFields обновляет поля обновляемого пользователя.
+     *
+     * @param updatedUser обновляемый пользователь.
+     * @param id          идентификатор обновляемого пользователя.
+     */
     private void updateUserFields(User updatedUser, Long id) {
         User user = users.get(id);
         if (updatedUser.getName() != null) {
@@ -74,6 +80,12 @@ public class UserRepositoryImpl implements UserRepository {
         users.put(id, user);
     }
 
+    /**
+     * Метод mailDuplicateCheck проверяет дублирование поля email проверяемого пользователя с аналогичным полем других
+     * пользователей.
+     *
+     * @param checkedUser проверяемый пользователь.
+     */
     private void mailDuplicateCheck(User checkedUser) {
         if (users.values().stream().anyMatch(user -> user.getEmail().equals(checkedUser.getEmail()))) {
             log.error("@mail: {} используется другим пользователем", checkedUser.getEmail());
@@ -81,6 +93,11 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    /**
+     * Метод getNextId возвращает следующий идентификатор пользователя.
+     *
+     * @return следующий идентификатор.
+     */
     private long getNextId() {
         return idCount++;
     }

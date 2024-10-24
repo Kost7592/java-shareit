@@ -1,15 +1,20 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс ItemServiceImpl реализация интерфейса ItemService для работы с вещами (items).
+ */
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
@@ -47,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getItemsBySearch(String text) {
         if (text.isEmpty()) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<Item> searchedItems = itemRepository.getItemsBySearch(text);
         return searchedItems.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());

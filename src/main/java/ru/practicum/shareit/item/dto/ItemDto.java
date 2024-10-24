@@ -2,24 +2,31 @@ package ru.practicum.shareit.item.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
+/**
+ * Класс ItemDto представляет собой DTO (Data Transfer Object) для передачи данных о вещи между слоями приложения.
+ * Он содержит следующие поля:
+ * - id — уникальный идентификатор вещи;
+ * - name — название вещи;
+ * - description — описание вещи;
+ * - available — статус доступности;
+ * - ownerId — идентификатор пользователя-владельца;
+ * - request — идентификатор запроса, в ответ на который создана вещь.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    Long id;
+    private Long id;
     @NotBlank(message = "Поле не может быть пустым")
-    String name;
+    private String name;
     @NotBlank(message = "Поле не может быть пустым")
-    String description;
+    private String description;
     @NotNull(message = "Поле не может быть null")
-    Boolean available;
-    Long ownerId;
-    Long request;
+    private Boolean available;
+    private Long ownerId;
+    private Long request;
 }
