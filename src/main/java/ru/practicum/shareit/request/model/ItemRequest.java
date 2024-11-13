@@ -1,9 +1,6 @@
 package ru.practicum.shareit.request.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import ru.practicum.shareit.user.model.User;
 
@@ -19,6 +16,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
+@Table(name = "requests", schema = "public")
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
