@@ -1,56 +1,32 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.exception.NotFoundException;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
 /**
- * Интерфейс ItemRepository для работы с вещами (items).
+ * Интерфейс ItemRepository расширяет JpaRepository и предоставляет методы для работы с вещами.
  */
-public interface ItemRepository {
+public interface ItemRepository extends JpaRepository<Item, Long> {
     /**
-     * Метод createItem создаёт новую вещь.
+     * Метод getItemsBySearch выполняет запрос к базе данных и возвращает список вещей Item, соответствующих
+     * поисковому запросу.
      *
-     * @param userID идентификатор пользователя, который становится владельцем новой вещи.
-     * @param item вещь, данные которой будут использоваться для создания нового объекта.
-     * @return созданная вещь.
+     * @param text — строка с поисковым запросом.
+     * @return список вещей Item.
      */
-    Item createItem(Long userID, Item item);
-
-    /**
-     * Метод updateItem обновляет существующую вещь.
-     *
-     * @param userId идентификатор пользователя, выполняющего обновление.
-     * @param id идентификатор обновляемой вещи.
-     * @param updatedItem обновлённая вещь.
-     * @return обновлённая вещь.
-     */
-    Item updateItem(Long userId, Long id, Item updatedItem);
-
-    /**
-     * Метод getItem получает вещь по ее идентификатору.
-     *
-     * @param itemId идентификатор искомой вещи.
-     * @return вещь с указанным идентификатором.
-     * @throws NotFoundException, если вещь не найдена.
-     */
-    Item getItem(long itemId);
-
-    /**
-     * Метод getOwnerItems возвращает все вещи, принадлежащие указанному пользователю.
-     *
-     * @param userId идентификатор пользователя.
-     * @return список вещей, принадлежащих указанному пользователю, или пустой список, если у пользователя
-     * нет вещей.
-     */
-    List<Item> getOwnerItems(long userId);
-
-    /**
-     * Метод getItemsBySearch ищет вещи по тексту.
-     *
-     * @param text текст для поиска.
-     * @return список найденных вещей или пустой список, если вещи не найдены.
-     */
+    @Query("SELECT i FROM Item i WHERE i.available = true AND lower(i.name) LIKE lower(?1) OR lower(i.description) " +
+            "LIKE lower(?1)")
     List<Item> getItemsBySearch(String text);
+
+    /**
+     * Метод findByOwnerId выполняет запрос к базе данных и возвращает список вещей Item, принадлежащих указанному
+     * владельцу.
+     *
+     * @param ownerId — идентификатор владельца.
+     * @return список вещей Item.
+     */
+    List<Item> findByOwnerId(Long ownerId);
 }

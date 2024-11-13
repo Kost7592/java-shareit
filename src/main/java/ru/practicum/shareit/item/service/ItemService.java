@@ -1,5 +1,8 @@
 package ru.practicum.shareit.item.service;
 
+import ru.practicum.shareit.item.dto.CommentDtoRequest;
+import ru.practicum.shareit.item.dto.CommentDtoResponse;
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
@@ -9,52 +12,63 @@ import java.util.List;
  */
 public interface ItemService {
     /**
-     * Метод createItem создаёт новый элемент для указанного пользователя.
+     * Метод createItem создаёт новую вещь для указанного пользователя.
      *
-     * @param userId     идентификатор пользователя, создающего элемент.
-     * @param newItemDto объект нового элемента.
-     * @return созданный элемент в формате DTO.
+     * @param userId     идентификатор пользователя, создающего вещь.
+     * @param newItemDto объект новой вещи.
+     * @return созданная вещь в формате DTO.
      */
     ItemDto createItem(Long userId, ItemDto newItemDto);
 
     /**
-     * Метод updateItem обновляет существующий элемент.
+     * Метод updateItem обновляет существующую вещь.
      *
      * @param userId         идентификатор пользователя, который выполняет обновление.
-     * @param id             идентификатор обновляемого элемента.
-     * @param updatedItemDto обновлённый объект элемента.
-     * @return обновлённый элемент в формате DTO.
+     * @param itemId            идентификатор обновляемой вещи.
+     * @param updatedItemDto обновлённый объект вещи.
+     * @return обновлённая вещь в формате DTO.
      */
-    ItemDto updateItem(Long userId, Long id, ItemDto updatedItemDto);
+    ItemDto updateItem(Long userId, Long itemId, ItemDto updatedItemDto);
 
     /**
-     * Метод getItemDto получает элемент по его идентификатору.
+     * Метод getItemDto получает вещь по его идентификатору.
      *
-     * @param id идентификатор элемента.
-     * @return элемент в формате DTO.
+     * @param id идентификатор вещи.
+     * @return вещь в формате DTO.
      */
-    ItemDto getItemDto(Long id);
+
+    ItemBookingDto getItemDto(Long ownerId, Long id);
 
     /**
-     * Метод deleteItem удаляет элемент по его идентификатору.
+     * Метод deleteItem удаляет вещь по ее идентификатору.
      *
-     * @param id идентификатор удаляемого элемента.
+     * @param id идентификатор удаляемой вещи.
      */
     void deleteItem(Long id);
 
     /**
-     * Метод getOwnerAllItems возвращает все элементы, принадлежащие указанному владельцу.
+     * Метод getOwnerAllItems возвращает все вещи, принадлежащие указанному владельцу.
      *
-     * @param ownerId идентификатор владельца элементов.
-     * @return список элементов в формате DTO, принадлежащих указанному владельцу.
+     * @param ownerId идентификатор владельца вещей.
+     * @return список вещей в формате DTO, принадлежащих указанному владельцу.
      */
     List<ItemDto> getOwnerAllItems(Long ownerId);
 
     /**
-     * Метод getItemsBySearch ищет элементы по заданному тексту.
+     * Метод getItemsBySearch ищет вещь по заданному тексту.
      *
      * @param text текст для поиска.
-     * @return список найденных элементов в формате DTO.
+     * @return список найденных вещей в формате DTO.
      */
     List<ItemDto> getItemsBySearch(String text);
+
+    /**
+     * Метод addComment добавляет комментарий для вещи.
+     *
+     * @param itemId текст для поиска.
+     * @param userId идентификатор автора комментария.
+     * @param commentDtoRequest объект комментария commentDtoRequest приходящий в запросе CommentDtoRequest.
+     * @return список найденных вещей в формате DTO.
+     */
+    CommentDtoResponse addComment(long itemId, long userId, CommentDtoRequest commentDtoRequest);
 }

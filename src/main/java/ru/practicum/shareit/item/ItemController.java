@@ -4,13 +4,16 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDtoRequest;
+import ru.practicum.shareit.item.dto.CommentDtoResponse;
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
 /**
- * Контроллер ItemController для работы с элементами (items).
+ * Контроллер ItemController для работы с вещами (items).
  */
 @Slf4j
 @RestController
@@ -31,6 +34,22 @@ public class ItemController {
                               @Valid @RequestBody ItemDto itemDto) {
         log.info("Получен запрос на создание вещи владельцем с id: {}", userId);
         return itemService.createItem(userId, itemDto);
+    }
+
+    /**
+     * Метод addComment обрабатывает запросы на создание комментария к вещи.
+     *
+     * @param itemId            — идентификатор вещи, к которой будет добавлен комментарий.
+     * @param userId            — идентификатор пользователя, который добавляет комментарий.
+     * @param commentDtoRequest — объект с данными комментария.
+     * @return объект CommentDtoResponse с информацией о добавленном комментарии.
+     */
+    @PostMapping("/{item-id}/comment")
+    public CommentDtoResponse addComment(@PathVariable("item-id") long itemId,
+                                         @RequestHeader("X-Sharer-User-Id") long userId,
+                                         @Valid @RequestBody CommentDtoRequest commentDtoRequest) {
+        log.info("Получен запрос на создание комментария");
+        return itemService.addComment(itemId, userId, commentDtoRequest);
     }
 
     /**
@@ -55,9 +74,9 @@ public class ItemController {
      * @return вещь в формате DTO.
      */
     @GetMapping("/{id}")
-    public ItemDto getItemDto(@PathVariable Long id) {
+    public ItemBookingDto getItemDto(@RequestHeader("X-Sharer-User-Id") Long ownerId, @PathVariable Long id) {
         log.info("Получен запрос на получение вещи c id: {}", id);
-        return itemService.getItemDto(id);
+        return itemService.getItemDto(ownerId, id);
     }
 
     /**
