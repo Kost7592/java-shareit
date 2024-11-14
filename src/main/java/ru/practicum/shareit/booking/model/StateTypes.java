@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.model;
 
 import ru.practicum.shareit.error.exception.NotFoundException;
 
+import java.util.stream.Stream;
+
 /**
  * Определяет различные типы состояний бронирования.
  */
@@ -21,11 +23,9 @@ public enum StateTypes {
      * если статус не найден
      */
     public static StateTypes getStateFromText(String text) {
-        for (StateTypes state : StateTypes.values()) {
-            if (state.toString().equals(text)) {
-                return state;
-            }
-        }
-        throw new NotFoundException("Неизвестный статус");
+        return Stream.of(values())
+                .filter(x -> x.name().equalsIgnoreCase(text))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Неизвестный статус"));
     }
 }
