@@ -419,6 +419,5 @@ public class ItemServiceTest {
 
         assertNotNull(response);
         assertEquals(request.getText(), response.getText());
-
     }
 }

@@ -194,4 +194,11 @@ public class ItemRequestServiceTest {
         assertEquals(savedItRequest.getDescription(), itRequestDtoFromDbObserver.getDescription());
         assertEquals(savedItRequest.getRequestor().getId(), itRequestDtoFromDbObserver.getRequestor().getId());
     }
+
+    @SneakyThrows
+    @Test
+    public void getAllItemsOfNotExistingUser() {
+        assertThrows(NotFoundException.class,
+                () -> itemRequestService.getAllItemRequests(999L, 1, 10));
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.error.exception.NotFoundException;
+import ru.practicum.shareit.error.exception.ValidationException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
@@ -40,6 +41,7 @@ class ItemServiceImplTest {
     LocalDateTime now = LocalDateTime.now();
     private final ItemService itemService;
     private final UserService userService;
+    private final ItemServiceImpl itemServiceImpl;
 
     @Test
     void getItemWithBookingAndCommentTest() {
@@ -141,6 +143,123 @@ class ItemServiceImplTest {
         NotFoundException ex = assertThrows(NotFoundException.class, () -> itemService.updateItem(user.getId(),
                 itemDtoRequest1.getId(), itemDtoRequest1));
         assertEquals("Вещь с id 1 не найдена", ex.getMessage());
+    }
+
+    @Test
+    public void itemDeleteTest() {
+        ItemDto itemDto = ItemDto.builder()
+                .id(1L)
+                .name("Item")
+                .description("Item description")
+                .available(true)
+                .ownerId(1L)
+                .build();
+        UserDto user = UserDto.builder()
+                .id(1L)
+                .name("user")
+                .email("user@mail.ru")
+                .build();
+        userService.createUser(user);
+        itemService.createItem(user.getId(), itemDto);
+        assertNotNull(itemService.getOwnerAllItems(1L));
+        itemService.deleteItem(1L);
+        assertEquals(0, itemService.getOwnerAllItems(1L).size());
+    }
+
+    @Test
+    public void updateItemNameTest() {
+        UserDto user = UserDto.builder()
+                .id(1L)
+                .name("user")
+                .email("user@mail.ru")
+                .build();
+        ItemDto itemDto = ItemDto.builder()
+                .id(1L)
+                .name("Item")
+                .description("Item description")
+                .available(true)
+                .ownerId(1L)
+                .build();
+        ItemDto itemForUpdateDto = ItemDto.builder()
+                .id(1L)
+                .name("updatedItem")
+                .build();
+        userService.createUser(user);
+        itemService.createItem(1L, itemDto);
+        itemService.updateItem(1L, 1L, itemForUpdateDto);
+        assertEquals(itemForUpdateDto.getName(), itemService.getItemDto(1L, 1L).getName());
+    }
+
+    @Test
+    public void updateItemDescriptionTest() {
+        UserDto user = UserDto.builder()
+                .id(1L)
+                .name("user")
+                .email("user@mail.ru")
+                .build();
+        ItemDto itemDto = ItemDto.builder()
+                .id(1L)
+                .name("Item")
+                .description("Item description")
+                .available(true)
+                .ownerId(1L)
+                .build();
+        ItemDto itemForUpdateDto = ItemDto.builder()
+                .id(1L)
+                .description("updatedItem Description")
+                .build();
+        userService.createUser(user);
+        itemService.createItem(1L, itemDto);
+        itemService.updateItem(1L, 1L, itemForUpdateDto);
+        assertEquals(itemForUpdateDto.getDescription(), itemService.getItemDto(1L, 1L).getDescription());
+    }
+
+    @Test
+    public void updateItemAvailableTest() {
+        UserDto user = UserDto.builder()
+                .id(1L)
+                .name("user")
+                .email("user@mail.ru")
+                .build();
+        ItemDto itemDto = ItemDto.builder()
+                .id(1L)
+                .name("Item")
+                .description("Item description")
+                .available(true)
+                .ownerId(1L)
+                .build();
+        ItemDto itemForUpdateDto = ItemDto.builder()
+                .id(1L)
+                .available(false)
+                .build();
+        userService.createUser(user);
+        itemService.createItem(1L, itemDto);
+        itemService.updateItem(1L, 1L, itemForUpdateDto);
+        assertEquals(itemForUpdateDto.getAvailable(), itemService.getItemDto(1L, 1L).getAvailable());
+    }
+
+    @Test
+    public void updateItemByNotOwner() {
+        UserDto user = UserDto.builder()
+                .id(1L)
+                .name("user")
+                .email("user@mail.ru")
+                .build();
+        ItemDto itemDto = ItemDto.builder()
+                .id(1L)
+                .name("Item")
+                .description("Item description")
+                .available(true)
+                .ownerId(1L)
+                .build();
+        ItemDto itemForUpdateDto = ItemDto.builder()
+                .id(1L)
+                .available(false)
+                .build();
+        userService.createUser(user);
+        itemService.createItem(1L, itemDto);
+        assertThrows(ValidationException.class,
+                () -> itemService.updateItem(999L, 1L, itemForUpdateDto));;
     }
 
     @Test
