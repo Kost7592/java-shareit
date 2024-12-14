@@ -23,8 +23,8 @@ import ru.practicum.shareit.error.UnsupportedStatusException;
 @RequiredArgsConstructor
 @Validated
 public class BookingController {
-    static final String userHeader = "X-Sharer-User-Id";
-    static final String path = "/{booking-id}";
+    private static final String userHeader = "X-Sharer-User-Id";
+    private static final String path = "/{booking-id}";
     private final BookingClient bookingClient;
 
     /**

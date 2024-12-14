@@ -21,7 +21,7 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 @Slf4j
 @Validated
 public class RequestController {
-    static final String userHeader = "X-Sharer-User-Id";
+    private static final String userHeader = "X-Sharer-User-Id";
     private final ItemRequestClient itemRequestClient;
 
     /**

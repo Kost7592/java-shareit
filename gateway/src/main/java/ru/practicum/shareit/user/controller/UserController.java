@@ -19,8 +19,7 @@ import ru.practicum.shareit.validation.Create;
 @Slf4j
 @Validated
 public class UserController {
-
-    static final String path = "/{user-id}";
+    private static final String path = "/{user-id}";
     private final UserClient userClient;
 
     /**
